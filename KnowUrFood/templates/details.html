@@ -1,0 +1,130 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+  <style>
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      border-bottom: 1px dotted black;
+    }
+
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: 300px;
+      background-color: #fff;
+      color: #000;
+      text-align: center;
+      border-radius: 6px;
+      padding: 5px 0;
+
+      /* Position the tooltip */
+      position: absolute;
+      z-index: 1;
+    }
+
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      margin-top: 6px;
+      resize: vertical;
+    }
+
+    input[type=submit]:hover {
+      background-color: #45a049;
+    }
+
+    .odd {
+          border: 1px solid #ccc;
+          border-radius: 5px;
+    }
+
+    .w3-light-grey {
+        border-radius: 5px;
+    }
+
+    .container {
+      background-color: #f2f2f2;
+      padding: 20px 20px 1px 20px;
+    }
+
+  </style>
+{% endblock css %}
+
+{% block title %} Product Details |{% endblock title %}
+
+{% block content %}
+
+  <!-- Menu Section -->
+  <div class="w3-row w3-padding-64" id="menu">
+    <div class="w3-container w3-blue">
+        <div style="width; 50%; float:left"><h1>Product Details</h1></div>
+            {{ search_form.name }}
+    </div>
+  </div>
+  <div class="w3-row w3-padding-8">
+    <div class="w3-col l6 w3-padding-large">
+      <h2 class="w3-center">{{object.name}}</h2>
+      <span class="w3-large">Company Name : {{object.company}}</span><br>
+        <span class="w3-large">
+            Website : <a href="{{object.company.website}}" target="_blank">{{object.company.website}}</a>
+        </span><br>
+        <h3 class="w3-center">Product Ingredients</h3>
+      {% for ingredient in object.ingredients.all %}
+        {% if not ingredient.code %}
+          {%if ingredient.description %}
+            <div class="tooltip">{{ ingredient }}
+              <span class="tooltiptext">{{ ingredient.description | safe}}</span>
+            </div><br>
+          {% else %}
+              {{ ingredient }}<br>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+      <hr>
+      {% for ingredient in object.ingredients.all %}
+        {% if ingredient.code %}
+          {{ ingredient }} - {{ingredient.code}}<br/>
+          <div class="w3-text-grey">{{ingredient.code.details | safe}}</div><br>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="w3-col l6 w3-padding-large">
+        <img src="{{ object.front_image.url }}" class="w3-round w3-image w3-opacity-min" alt="Table Setting"
+             style="height:250px !important; width:600px">
+        <hr>
+        <img src="{{ object.back_image.url }}" class="w3-round w3-image w3-opacity-min" alt="Table Setting"
+             style="height:250px !important; width:600px">
+    </div>
+  </div>
+
+  <div class="container">
+    <form method="POST" action="{% url 'product-comment' object.id %}">
+      {% csrf_token %}
+      <div class="messagebox">
+              {{ form.comment }}
+          <button class="w3-center w3-button w3-section w3-blue w3-ripple"> submit </button>
+      </div>
+    </form>
+  </div><br>
+
+<div class="w3-row-padding">
+    {% for comment in comments %}
+        <div class="w3-container w3-margin-bottom">
+          <div class="w3-container w3-white {% if forloop.counter|divisibleby:2 %}w3-light-grey{% else %}odd{% endif %}">
+                <p><b>{{ comment.created_by.username }}</b></p>
+                <p>{{ comment.comment }}</p>
+          </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock content %}
