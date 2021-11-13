@@ -39,6 +39,7 @@ class ScientificCode(models.Model):
     class Meta:
         verbose_name = _("Scientific Code")
         verbose_name_plural = _("Scientific Codes")
+        ordering = ['-id']
 
     def __unicode__(self):
         return self.code
@@ -60,6 +61,7 @@ class Ingredient(models.Model):
     class Meta:
         verbose_name = _("Ingredient")
         verbose_name_plural = _("Ingredients")
+        ordering = ['-id']
 
     def __unicode__(self):
         return self.name
@@ -79,6 +81,7 @@ class ProductCompany(models.Model):
     class Meta:
         verbose_name = _("Company")
         verbose_name_plural = _("Companies")
+        ordering = ['-id']
 
     def __unicode__(self):
         return self.name
@@ -110,6 +113,7 @@ class Product(models.Model):
     class Meta:
         verbose_name = _("Product")
         verbose_name_plural = _("Products")
+        ordering = ['-id']
 
     def __unicode__(self):
         return self.name
@@ -131,6 +135,7 @@ class ProductComment(models.Model):
     class Meta:
         verbose_name = _("Product Comment")
         verbose_name_plural = _("Product Comments")
+        ordering = ['-id']
 
     def __unicode__(self):
         return 'Comment by {} on {}'.format(self.created_by, self.product)
